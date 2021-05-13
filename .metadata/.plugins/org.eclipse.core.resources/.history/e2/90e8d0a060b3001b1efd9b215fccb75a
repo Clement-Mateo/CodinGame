@@ -1,0 +1,39 @@
+import java.util.ArrayList;
+
+class Cell {
+
+	public int					index;
+	public int					richness;
+	public ArrayList<Integer>	neighs;
+
+	public Cell() {
+		neighs = new ArrayList<>();
+	}
+
+	public Cell(int index, int richness, ArrayList<Integer> neights) {
+		super();
+		this.index = index;
+		this.richness = richness;
+		this.neighs = neights;
+	}
+
+	public boolean existTree() {
+		for (Tree tree : Player.trees) {
+			if (tree.cell.index == this.index) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean existTree(int size) {
+		for (Tree tree : Player.trees) {
+			if (tree.cell.index == this.index) {
+				if (tree.size == size) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+}

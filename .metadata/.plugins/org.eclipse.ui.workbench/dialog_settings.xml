@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="ImportExportAction">
+	</section>
+	<section name="WorkbenchPreferenceDialogSettings">
+		<item key="DIALOG_X_ORIGIN" value="632"/>
+		<item key="DIALOG_Y_ORIGIN" value="132"/>
+	</section>
+	<section name="PreferencesImportWizard">
+		<item key="" value="D:\travail\java\param eclipse\preferences.epf"/>
+		<list key="WizardPreferencesExportPage1.STORE_DESTINATION_NAMES_ID">
+			<item value="D:\travail\java\param eclipse\preferences.epf"/>
+		</list>
+	</section>
+</section>
