@@ -58,7 +58,7 @@ class Player {
 					if (getNbOfTreesMeForSize(3) >= 3) { // si j'ai au moins 3 arbres de taille 3
 
 						if (getNbOfTreesMeForSize(3) > 2) { // si j'ai plus de 2 arbres de taille 3
-							if (getScoreForCompleteBestTreeICan() > 10 || getNbOfTreesMeForSize(3) > 4) { // si c'est une bonne occasion (bon score) ou que j'ai vraiment beaucoup d'arbres de taille 3
+							if (getScoreForCompleteBestTreeICan() > 12 || getNbOfTreesMeForSize(3) > 5) { // si c'est une bonne occasion (bon score) ou que j'ai vraiment beaucoup d'arbres de taille 3
 								completeBestTreeICan(); // alors je complete des arbres jusqu'a n'en avoir que 3 de taille 3
 							}
 

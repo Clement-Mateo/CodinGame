@@ -58,7 +58,7 @@ class Player {
 					if (getNbOfTreesMeForSize(3) >= 3) { // si j'ai au moins 3 arbres de taille 3
 
 						if (getNbOfTreesMeForSize(3) > 2) { // si j'ai plus de 2 arbres de taille 3
-							if (getScoreForCompleteBestTreeICan() > 10 || getNbOfTreesMeForSize(3) > 4) { // si c'est une bonne occasion (bon score) ou que j'ai vraiment beaucoup d'arbres de taille 3
+							if (getScoreForCompleteBestTreeICan() > 12 || getNbOfTreesMeForSize(3) > 5) { // si c'est une bonne occasion (bon score) ou que j'ai vraiment beaucoup d'arbres de taille 3
 								completeBestTreeICan(); // alors je complete des arbres jusqu'a n'en avoir que 3 de taille 3
 							}
 
@@ -365,11 +365,63 @@ class Player {
 		System.err.println(message);
 	}
 
-	public static int getNbRoundsForCompleteAllFinalTrees() {
+	// public static int getNbRoundsForCompleteAllFinalTrees() {
 
-		// TODO
-		return 0;
+	// int nbRoundsForCompleteAllFinalTrees = 0;
 
-	}
+	// ArrayList<Tree> treesForSimulation = treesMe;
+	// ArrayList<Tree> treesCompletedTmp = new ArrayList<>();
+
+	// int sunsActual = playerMe.nbSuns;
+	// int sunsPlanned = getSunsPlannedForTrees(treesMe);
+
+	// boolean found = true;
+	// while (found) {
+
+	// found = false;
+	// loop: for (Tree tree : treesForSimulation) { // pour tout mes arbres
+	// if (tree.size == 3) { // si l'arbre est de taille 3
+	// if (sunsActual >= 4) { // et que j'ai assez d'energie pour completer son cycle
+	// sunsActual -= 4;
+
+	// if (!tree.isDormant) {
+	// sunsPlanned -= tree.size;
+	// }
+
+	// treesCompletedTmp.add(tree); // je le complete
+	// } else {
+	// if (sunsPlanned > 0) { // si j'ai encore des arbres qui me rapportent de l'energie alors j'attend d'avoir assez d'energie
+	// sunsActual += sunsPlanned;
+	// break loop;
+	// } else {
+	// return getNbOfTreesMeForSize(3); // sinon je renvoi le nombre de tours equivalent au nombre d'arbres de taille 3 que j'ai
+	// }
+	// }
+	// found = true;
+	// }
+	// }
+
+	// /* Suppression des arbres qu'on a completé */
+	// for (Tree treeToRemove : treesCompletedTmp) {
+	// Integer indexInTreesForSimulation = null;
+	// for (int i = 0; i < treesForSimulation.size(); i++) {
+	// Tree tree = treesForSimulation.get(i);
+
+	// if (treeToRemove.cell.index == tree.cell.index) {
+	// indexInTreesForSimulation = i;
+	// }
+	// }
+
+	// if (indexInTreesForSimulation != null) {
+	// treesForSimulation.remove(indexInTreesForSimulation);
+	// }
+	// }
+
+	// nbRoundsForCompleteAllFinalTrees++;
+	// }
+
+	// return nbRoundsForCompleteAllFinalTrees;
+
+	// }
 
 }
