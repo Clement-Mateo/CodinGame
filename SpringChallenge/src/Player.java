@@ -54,9 +54,10 @@ class Player {
 					growBestTreeICan(); // j'ameliore le meilleur arbre
 
 				} else {
+
 					if (getNbOfTreesMeForSize(3) >= 3) { // si j'ai au moins 3 arbres de taille 3
 
-						if (getNbOfTreesMeForSize(3) > 3) { // si j'ai plus de 3 arbres de taille 3
+						if (getNbOfTreesMeForSize(3) > 2) { // si j'ai plus de 2 arbres de taille 3
 							if (getScoreForCompleteBestTreeICan() > 10 || getNbOfTreesMeForSize(3) > 4) { // si c'est une bonne occasion (bon score) ou que j'ai vraiment beaucoup d'arbres de taille 3
 								completeBestTreeICan(); // alors je complete des arbres jusqu'a n'en avoir que 3 de taille 3
 							}
@@ -66,14 +67,16 @@ class Player {
 
 					growBestTreeICan(); // j'ameliore le meilleur arbre (en priorité les plus grand, sur la terre la plus riche)
 
-					seedBestTreeICan(); // je plante le maximum d'arbres que je peux (en priorité sur les terres les plus riches)
+					if (getNbRoundsLeft() > 12) {
+						seedBestTreeICan(); // je plante le maximum d'arbres que je peux (en priorité sur les terres les plus riches)
+					}
 				}
 
 			} else { // s'il reste moins de 4 rounds
 
 				completeBestTreeICan(); // je complete tout mes arbes de taille 3 que je peux (en priorité ceux sur les terres les plus riches)
 
-				quickGrowThree3AndCompleteIt(); // je fait des arbres de taille 3 en priorité et je les termines (en priorité ceux sur les terres les plus riches)
+				quickGrowThrees3AndCompleteIt(); // je fait des arbres de taille 3 en priorité et je les termines (en priorité ceux sur les terres les plus riches)
 			}
 
 			action("WAIT J'attend");
@@ -129,7 +132,7 @@ class Player {
 	}
 
 	public static void seedBestTreeICan() {
-		if (!played && (getNbOfTreesMeForSize(0) < 3 || playerMe.nbSuns > 10)) { // si je n'ai pas deja joue
+		if (!played && playerMe.nbSuns >= getCostSeed() && (getNbOfTreesMeForSize(0) < 2 || playerMe.nbSuns > 10)) { // si je n'ai pas deja joue, que j'ai assez de soleils pour planter et que j'ai moins de 3 graines ou plus de 10 soleils
 
 			Tree bestTree = null;
 			Cell bestCell = null;
@@ -152,7 +155,7 @@ class Player {
 			}
 
 			if (bestTree != null && bestCell != null) {
-				action("SEED " + bestTree.cell.index + " " + bestCell.index + " Je plante");
+				action("SEED " + bestTree.cell.index + " " + bestCell.index + " seed score : " + bestTree.getScoreForSeed(bestCell));
 				Tree treeSeeded = new Tree(bestCell, 0, true, true);
 				trees.add(treeSeeded);
 				treesMe.add(treeSeeded);
@@ -179,7 +182,7 @@ class Player {
 			}
 
 			if (bestTree != null) {
-				action("GROW " + bestTree.cell.index + " Je fait grandir de " + bestTree.size + " a " + (bestTree.size + 1));
+				action("GROW " + bestTree.cell.index + " grow " + bestTree.cell.index + " score : " + bestTree.getScoreForGrow());
 
 				bestTree.size++;
 				bestTree.save();
@@ -207,7 +210,7 @@ class Player {
 			}
 
 			if (bestTree != null) {
-				action("COMPLETE " + bestTree.cell.index + " je complete un arbre");
+				action("COMPLETE " + bestTree.cell.index + " complete " + bestTree.cell.index + " score : " + bestTree.getScoreForComplete());
 
 				trees.remove(bestTree);
 				treesMe.remove(bestTree);
@@ -241,30 +244,33 @@ class Player {
 		return 0;
 	}
 
-	public static void quickGrowThree3AndCompleteIt() {
+	public static void quickGrowThrees3AndCompleteIt() {
 		Tree bestTree = null;
 		for (Tree tree : treesMe) { // pour chacun de mes arbres
-			if (bestTree == null) {
-				bestTree = tree;
-			} else {
-				if (tree.size > bestTree.size) { // si l'arbre est plus grand
-					bestTree = tree; // je le choisi
-				} else if (tree.size == bestTree.size) { // si l'arbre est de même taille
-					if (tree.cell.richness > bestTree.cell.richness) { // si l'arbre est sur une case plus riche
+			if (!tree.isDormant) { // si l'arbre n'est pas endormis
+				if (bestTree == null) {
+					bestTree = tree;
+				} else {
+					if (tree.size > bestTree.size) { // si l'arbre est plus grand
 						bestTree = tree; // je le choisi
+					} else if (tree.size == bestTree.size) { // si l'arbre est de même taille
+						if (tree.cell.richness > bestTree.cell.richness) { // si l'arbre est sur une case plus riche
+							bestTree = tree; // je le choisi
+						}
 					}
 				}
 			}
 		}
 
-		if (playerMe.nbSuns >= bestTree.getCostForGrowAndCompleteTree()) {
-			if (bestTree.getNbRoundsForGrowAndCompleteTree() <= getNbRoundsLeft()) { // si j'ai assez de rounds pour grow + complete l'arbre
-				if (!bestTree.isDormant) { // si l'arbre n'est pas endormis
+		if (bestTree != null) {
+			if (!played && playerMe.nbSuns >= bestTree.getCostForGrowAndCompleteTree()) {
+				if (bestTree.getNbRoundsForGrowAndCompleteTree() <= getNbRoundsLeft()) { // si j'ai assez de rounds pour grow + complete l'arbre
 					if (bestTree.size < 3) { // si l'arbre n'est pas encore de taille max
-						action("GROW " + bestTree.cell.index + " je fait grandir pour vite complete");
+						action("GROW " + bestTree.cell.index + " quick grow " + bestTree.cell.index + " score : " + bestTree.getScoreForGrow());
 						playerMe.nbSuns -= getCostGrow(bestTree.size);
 					} else { // si l'arbre est de taille max
-						action("COMPLETE " + bestTree.cell.index + " je complete pour vite faire des points");
+						action("COMPLETE " + bestTree.cell.index + " quick complete " + bestTree.cell.index + " score : "
+								+ bestTree.getScoreForComplete());
 						playerMe.nbSuns -= 4;
 
 						trees.remove(bestTree);
@@ -315,7 +321,7 @@ class Player {
 	}
 
 	public static int getNbRoundsLeft() {
-		return 23 - day; // 0 a 23 jours, chaque jour dure 6 rounds
+		return 24 - day; // 0 a 23 jours, chaque jour dure 6 rounds
 	}
 
 	public static int getCostGrow(int size) {
@@ -359,63 +365,11 @@ class Player {
 		System.err.println(message);
 	}
 
-	// public static int getNbRoundsForCompleteAllFinalTrees() {
+	public static int getNbRoundsForCompleteAllFinalTrees() {
 
-	// int nbRoundsForCompleteAllFinalTrees = 0;
+		// TODO
+		return 0;
 
-	// ArrayList<Tree> treesForSimulation = treesMe;
-	// ArrayList<Tree> treesCompletedTmp = new ArrayList<>();
-
-	// int sunsActual = playerMe.nbSuns;
-	// int sunsPlanned = getSunsPlannedForTrees(treesMe);
-
-	// boolean found = true;
-	// while (found) {
-
-	// found = false;
-	// loop: for (Tree tree : treesForSimulation) { // pour tout mes arbres
-	// if (tree.size == 3) { // si l'arbre est de taille 3
-	// if (sunsActual >= 4) { // et que j'ai assez d'energie pour completer son cycle
-	// sunsActual -= 4;
-
-	// if (!tree.isDormant) {
-	// sunsPlanned -= tree.size;
-	// }
-
-	// treesCompletedTmp.add(tree); // je le complete
-	// } else {
-	// if (sunsPlanned > 0) { // si j'ai encore des arbres qui me rapportent de l'energie alors j'attend d'avoir assez d'energie
-	// sunsActual += sunsPlanned;
-	// break loop;
-	// } else {
-	// return getNbOfTreesMeForSize(3); // sinon je renvoi le nombre de tours equivalent au nombre d'arbres de taille 3 que j'ai
-	// }
-	// }
-	// found = true;
-	// }
-	// }
-
-	// /* Suppression des arbres qu'on a completé */
-	// for (Tree treeToRemove : treesCompletedTmp) {
-	// Integer indexInTreesForSimulation = null;
-	// for (int i = 0; i < treesForSimulation.size(); i++) {
-	// Tree tree = treesForSimulation.get(i);
-
-	// if (treeToRemove.cell.index == tree.cell.index) {
-	// indexInTreesForSimulation = i;
-	// }
-	// }
-
-	// if (indexInTreesForSimulation != null) {
-	// treesForSimulation.remove(indexInTreesForSimulation);
-	// }
-	// }
-
-	// nbRoundsForCompleteAllFinalTrees++;
-	// }
-
-	// return nbRoundsForCompleteAllFinalTrees;
-
-	// }
+	}
 
 }

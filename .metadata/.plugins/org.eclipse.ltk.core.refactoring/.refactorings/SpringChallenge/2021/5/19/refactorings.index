@@ -3,3 +3,5 @@
 1620851361683	Rename local variable 'nbTreeInRangeToSHADOW'
 1620894873630	Rename method 'getNbOfEnnemyTreesUnderShadowByTree'
 1620895490933	Rename local variable 'ennemyTreesUnderShadowNextRoundByTree'
+1621003608338	Rename local variable 'ennemyTreesUnderShadowByTreeNextRound'
+1621003645127	Rename local variable 'ennemyTreesUnderShadowByTreeNextRound'
